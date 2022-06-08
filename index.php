@@ -1,13 +1,12 @@
 <?php
-include_once("libs/Rapido-Server/index.php");
+include_once("libs/Rapido-Server/rapido.php");
+include_once("middlewares/Rapido@Routes/index.php");
+include_once("middlewares/Rapido@BodyParser/index.php");
+include_once("middlewares/Rapido@Layout/index.php");
+include_once("middlewares/Rapido@DotEnv/index.php");
+include_once("middlewares/Rapido@Sessions/index.php");
 
-Sessions
-BodyParser
-Routes
-Layout
-DotEnv
-
-use rapido\{Router,Routes,Sessions,BodyParser,Datastorage,Layout,DotEnv,SQLI,Fetch};
+use rapido\{Router,SQLI,Fetch};
 
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: application/json; text/plain;');
