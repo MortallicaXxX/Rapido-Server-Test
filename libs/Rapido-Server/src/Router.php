@@ -101,7 +101,12 @@ namespace Router{
 
     public $routeur;
     private $_get = array(); /** @author contient la liste des get */
+    private $_head = array(); /** @author contient la liste des get */
+    private $_options = array(); /** @author contient la liste des get */
     private $_post = array(); /** @desc contient la liste des post */
+    private $_put = array();
+    private $_patch = array();
+    private $_delete = array();
     private $_middleware = array();
 
     function __construct($_server){
@@ -117,8 +122,23 @@ namespace Router{
       if ($this -> routeur["REQUEST_METHOD"] == "GET") {
         $this -> __delegate_get();
       }
+      if ($this -> routeur["REQUEST_METHOD"] == "HEAD") {
+        $this -> __delegate_head();
+      }
+      if ($this -> routeur["REQUEST_METHOD"] == "OPTIONS") {
+        $this -> __delegate_options();
+      }
       if ($this -> routeur["REQUEST_METHOD"] == "POST") {
         $this -> __delegate_post();
+      }
+      if ($this -> routeur["REQUEST_METHOD"] == "PUT") {
+        $this -> __delegate_put();
+      }
+      if ($this -> routeur["REQUEST_METHOD"] == "PATCH") {
+        $this -> __delegate_patch();
+      }
+      if ($this -> routeur["REQUEST_METHOD"] == "DELETE") {
+        $this -> __delegate_delete();
       }
     }
 
@@ -181,8 +201,48 @@ namespace Router{
     /**
       *Description :
     */
+    private function __delegate_head(){
+      $chanelCallBack = $this -> __open_chanel($this -> _head); // permet de charger le chanel
+      $chanelCallBack(new Request($this -> routeur),new Response());
+    }
+
+    /**
+      *Description :
+    */
+    private function __delegate_options(){
+      $chanelCallBack = $this -> __open_chanel($this -> _options); // permet de charger le chanel
+      $chanelCallBack(new Request($this -> routeur),new Response());
+    }
+
+    /**
+      *Description :
+    */
     private function __delegate_post(){
       $chanelCallBack = $this -> __open_chanel($this -> _post); // permet de charger le chanel
+      $chanelCallBack(new Request($this -> routeur),new Response());
+    }
+
+    /**
+      *Description :
+    */
+    private function __delegate_put(){
+      $chanelCallBack = $this -> __open_chanel($this -> _put); // permet de charger le chanel
+      $chanelCallBack(new Request($this -> routeur),new Response());
+    }
+
+    /**
+      *Description :
+    */
+    private function __delegate_patch(){
+      $chanelCallBack = $this -> __open_chanel($this -> _patch); // permet de charger le chanel
+      $chanelCallBack(new Request($this -> routeur),new Response());
+    }
+
+    /**
+      *Description :
+    */
+    private function __delegate_delete(){
+      $chanelCallBack = $this -> __open_chanel($this -> _delete); // permet de charger le chanel
       $chanelCallBack(new Request($this -> routeur),new Response());
     }
 
@@ -221,11 +281,61 @@ namespace Router{
     /**
       *Description :
     */
+    function head($chanel,$callback){
+      $primaryChanel = (key_exists("chanel",$GLOBALS) == true && $GLOBALS["chanel"] != null && $GLOBALS["chanel"] != "/" ? $this -> __primary_chanel($GLOBALS["chanel"].$chanel) : $this -> __primary_chanel($chanel));
+      $secondaryChanel = (key_exists("chanel",$GLOBALS) == true && $GLOBALS["chanel"] != null && $GLOBALS["chanel"] != "/" ? $this -> __secondary_chanel($GLOBALS["chanel"].$chanel) : $this -> __secondary_chanel($chanel));
+      if(key_exists($primaryChanel,$this -> _head) == false)$this -> _head[$primaryChanel] = array();
+      $this -> _head[$primaryChanel][$secondaryChanel] = $callback;
+    }
+
+    /**
+      *Description :
+    */
+    function options($chanel,$callback){
+      $primaryChanel = (key_exists("chanel",$GLOBALS) == true && $GLOBALS["chanel"] != null && $GLOBALS["chanel"] != "/" ? $this -> __primary_chanel($GLOBALS["chanel"].$chanel) : $this -> __primary_chanel($chanel));
+      $secondaryChanel = (key_exists("chanel",$GLOBALS) == true && $GLOBALS["chanel"] != null && $GLOBALS["chanel"] != "/" ? $this -> __secondary_chanel($GLOBALS["chanel"].$chanel) : $this -> __secondary_chanel($chanel));
+      if(key_exists($primaryChanel,$this -> _options) == false)$this -> _options[$primaryChanel] = array();
+      $this -> _options[$primaryChanel][$secondaryChanel] = $callback;
+    }
+
+    /**
+      *Description :
+    */
     function post($chanel,$callback){
       $primaryChanel = (key_exists("chanel",$GLOBALS) == true && $GLOBALS["chanel"] != null && $GLOBALS["chanel"] != "/" ? $this -> __primary_chanel($GLOBALS["chanel"].$chanel) : $this -> __primary_chanel($chanel));
       $secondaryChanel = (key_exists("chanel",$GLOBALS) == true && $GLOBALS["chanel"] != null && $GLOBALS["chanel"] != "/" ? $this -> __secondary_chanel($GLOBALS["chanel"].$chanel) : $this -> __secondary_chanel($chanel));
       if(key_exists($primaryChanel,$this -> _post) == false)$this -> _post[$primaryChanel] = array();
       $this -> _post[$primaryChanel][$secondaryChanel] = $callback;
+    }
+
+    /**
+      *Description :
+    */
+    function put($chanel,$callback){
+      $primaryChanel = (key_exists("chanel",$GLOBALS) == true && $GLOBALS["chanel"] != null && $GLOBALS["chanel"] != "/" ? $this -> __primary_chanel($GLOBALS["chanel"].$chanel) : $this -> __primary_chanel($chanel));
+      $secondaryChanel = (key_exists("chanel",$GLOBALS) == true && $GLOBALS["chanel"] != null && $GLOBALS["chanel"] != "/" ? $this -> __secondary_chanel($GLOBALS["chanel"].$chanel) : $this -> __secondary_chanel($chanel));
+      if(key_exists($primaryChanel,$this -> _put) == false)$this -> _put[$primaryChanel] = array();
+      $this -> _put[$primaryChanel][$secondaryChanel] = $callback;
+    }
+
+    /**
+      *Description :
+    */
+    function patch($chanel,$callback){
+      $primaryChanel = (key_exists("chanel",$GLOBALS) == true && $GLOBALS["chanel"] != null && $GLOBALS["chanel"] != "/" ? $this -> __primary_chanel($GLOBALS["chanel"].$chanel) : $this -> __primary_chanel($chanel));
+      $secondaryChanel = (key_exists("chanel",$GLOBALS) == true && $GLOBALS["chanel"] != null && $GLOBALS["chanel"] != "/" ? $this -> __secondary_chanel($GLOBALS["chanel"].$chanel) : $this -> __secondary_chanel($chanel));
+      if(key_exists($primaryChanel,$this -> _patch) == false)$this -> _patch[$primaryChanel] = array();
+      $this -> _patch[$primaryChanel][$secondaryChanel] = $callback;
+    }
+
+    /**
+      *Description :
+    */
+    function delete($chanel,$callback){
+      $primaryChanel = (key_exists("chanel",$GLOBALS) == true && $GLOBALS["chanel"] != null && $GLOBALS["chanel"] != "/" ? $this -> __primary_chanel($GLOBALS["chanel"].$chanel) : $this -> __primary_chanel($chanel));
+      $secondaryChanel = (key_exists("chanel",$GLOBALS) == true && $GLOBALS["chanel"] != null && $GLOBALS["chanel"] != "/" ? $this -> __secondary_chanel($GLOBALS["chanel"].$chanel) : $this -> __secondary_chanel($chanel));
+      if(key_exists($primaryChanel,$this -> _delete) == false)$this -> _delete[$primaryChanel] = array();
+      $this -> _delete[$primaryChanel][$secondaryChanel] = $callback;
     }
 
     /**
