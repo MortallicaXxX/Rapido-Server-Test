@@ -9,6 +9,12 @@ $Router -> get("/",function($req , $res){
   $res -> send("./public/index.html","file");
 });
 
+// Serve index.html on the index chanel
+$Router -> delete("/test",function($req , $res){
+  var_dump($req -> body);
+  $res -> send("reçus","text");
+});
+
 
 $GLOBALS['chanel'] = null;
 ?>

@@ -13,7 +13,7 @@ header('Access-Control-Allow-Headers: application/json; text/plain;');
 
 $App = new Router($_SERVER);
 $GLOBAL["App"] = $App;
-$GLOBAL["Datastorage"] = Datastorage::class;
+// $GLOBAL["Datastorage"] = Datastorage::class;
 
 $App -> use( Sessions::class , './sessions' );
 $App -> use( BodyParser::class );
@@ -23,6 +23,10 @@ $App -> use( Routes::class , array('./routes' => array(
 )));
 $App -> use( Layout::class , "./layout" );
 $App -> use( DotEnv::class , "./bestDeal.env");
+
+$App -> get("/test",function($req , $res){
+  $res -> send("test","text");
+});
 
 
 $App -> handle();
